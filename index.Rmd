@@ -1,0 +1,62 @@
+--- 
+title: "A Minimal Book Example"
+author: "John Doe"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+# url: your book url like https://bookdown.org/yihui/bookdown
+# cover-image: path to the social sharing image like images/cover.jpg
+description: |
+  This is a minimal example of using the bookdown package to write a book.
+  The HTML output format for this example is bookdown::gitbook,
+  set in the _output.yml file.
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+---
+
+# About
+
+This is a _sample_ book written in **Markdown**. Test using {targets}.
+
+Near the top of the document, you may also wish to remove the `_targets_r` directory previously written by non-interactive runs of the report. Otherwise, your pipeline may contain superfluous targets.
+
+
+```{r}
+targets::tar_unscript()
+```
+
+## Setup
+
+If you are using old versions of `targets` (<= 0.7.0) and/or `knitr` (<= 1.33), you will need to load the `targets` package in the R Markdown document in order for Target Markdown code chunks to work.
+
+```{r}
+library(targets)
+```
+
+## Globals
+
+We first define some global options/functions common to all targets. The function below plots a histogram of ozone concentrations, and our histogram target will need it.
+
+```{targets example-globals2, tar_globals = TRUE}
+options(tidyverse.quiet = TRUE)
+tar_option_set(packages = c("biglm", "dplyr", "ggplot2", "readr", "tidyr"))
+create_plot <- function(data) {
+  ggplot(data) +
+    geom_histogram(aes(x = Ozone), bins = 12) +
+    theme_gray(24)
+}
+```
+
+
+```{r}
+tar_make()
+```
+
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
